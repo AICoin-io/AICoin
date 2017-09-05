@@ -1,14 +1,13 @@
-# AICoin (beta)
-This repository contains the Solidity code that will be used to create the AICoin.
+# AICoin
+This repository contains the Solidity code used to create the AICoin.
+It also contains the address of the coin and ABI, useful to add the contract to the Mist wallet.
 
 ## TEST-NET
 The beta version of the code exists already as a smart contract on the Ethereum Test-Net (Ropsten). To add this to your own contracts page, you can use the address and ABI code that are in files under the contracts folder of this repository.
 
-## Peer review
-The contract deployed was compiled with version 0.4.11+commit.68ef5810 of the solidity compiler. Peer review of the solidity code is welcomed.
-
 ## Javascript interface
-The contract code has been kept intentionally simple, and a javascript library is being developed to provide higher-level access to the contract information and to send transactions to execute contract methods.
+The contract code has been kept intentionally simple, and a javascript library has been developed to provide higher-level access to contract information and to send transactions that will execute contract methods.
+The two primary user methods are "transfer" to move AICoin from one address to another, and "vote" to participate in a ballot.
 
 ## Website
-To register for the AICoin ICO, please visit http://aicoin.io.
+To find out more about AICoin, please visit http://aicoin.io.
