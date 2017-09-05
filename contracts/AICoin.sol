@@ -33,18 +33,19 @@ contract ERC20Interface {
 }
 
 /*******************************************************************************
- * AICoin Beta - Smart Contract with token and ballot handling
+ * AICoin - Smart Contract with token and ballot handling
  *******************************************************************************/
-contract AICoinBeta is ERC20Interface {
+contract AICoin is ERC20Interface {
 
   /* ******************************
    * COIN data / functions
    * ******************************/
 
   /* Token constants */
-  string public constant name = 'AICoin Beta';
-  string public constant symbol = 'XAIβ';
+  string public constant name = 'AICoin';
+  string public constant symbol = 'XAI';
   uint8 public constant decimals = 8;
+  string public constant smallestUnit = 'Hofstadter';
 
   /* Token internal data */
   address m_administrator;
@@ -57,7 +58,7 @@ contract AICoinBeta is ERC20Interface {
   mapping(address => mapping (address => uint256)) allowed;
 
   /* One-time create function: initialize the supply and set the admin address */
-  function AICoinBeta (uint256 _initialSupply) {
+  function AICoin (uint256 _initialSupply) {
     m_administrator = msg.sender;
     m_totalSupply = _initialSupply;
     balances[msg.sender] = _initialSupply;
