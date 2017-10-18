@@ -2,49 +2,70 @@ window.onload = function () {
     configPage.loadNodeUrl();
     console.log("Connecting to Coin interface: " + configPage.nodeUrl);
 
-    AICoin.setNodeUrl(configPage.nodeUrl);
+    // restrict to MAINNET network .
+    AICoin.setSingleNetwork("MAINNET");
+    AICoin.setNodeUrl($.trim(configPage.nodeUrl));
     try
     {
         AICoin.connect();
         var info = AICoin.coinInfo();
-        configPage.isConnected = true;
+        if (typeof info === "undefined")
+        {
+            configPage.isConnected = false;
+            $('.connection-error .node-url-span').text(configPage.nodeUrl);
+            $('.connection-error').slideDown();
+            configPage.isConnected = true;
+        }
+        else {
+            $('.connection-success .text-message').text(' You are connected to ' + configPage.nodeUrl + ' Geth node.');
+            setTimeout(function () {
+                $('.connection-success').slideDown();
+                setTimeout(function() {
+                    $('.connection-success').slideUp();
+                }, 5000);
+            }, 200);
+            console.log("Coin Name: " + info.name);
+            console.log("Coin Symbol: " + info.symbol);
+            console.log("Coin Issued: " + parseFloat(info.issued).toFixed(8) + " " + info.symbol);
+        }
 
-        $('.connection-success .text-message').text(' You are connected to ' + configPage.nodeUrl + ' Geth node.');
-        setTimeout(function () {
-            $('.connection-success').slideDown();
-            setTimeout(function() {
-                $('.connection-success').slideUp();
-            }, 5000);
-        }, 200);
-        console.log("Coin Name: " + info.name);
-        console.log("Coin Symbol: " + info.symbol);
-        console.log("Coin Issued: " + parseFloat(info.issued).toFixed(8) + " " + info.symbol);
     } catch(ex) {
         configPage.isConnected = false;
+        $('.connection-error .node-url-span').text(configPage.nodeUrl);
         $('.connection-error').slideDown();
     }
     setInterval(function () {
             try {
                 var info = AICoin.coinInfo();
-                configPage.isConnected = true;
-                $('.connection-error').slideUp();
-                console.log('AICoin node connection OK.');
+                if (typeof info === "undefined")
+                {
+                    configPage.isConnected = false;
+                    $('.connection-error .node-url-span').text(configPage.nodeUrl);
+                    $('.connection-error').slideDown();
+                    console.log('Fail to connect AICoin core.');
+                }
+                else {
+                    configPage.isConnected = true;
+                    $('.connection-error').slideUp();
+                    console.log('AICoin node connection OK.');
+                }
             }
             catch (ex) {
                 configPage.isConnected = false;
+                $('.connection-error .node-url-span').text(configPage.nodeUrl);
                 $('.connection-error').slideDown();
                 console.log('Fail to connect AICoin core.');
             }
     }, 10000);
-    setInterval(function () {
-        $('.connection-error .text-message').text(' Can NOT connect to ' + configPage.nodeUrl + ' Geth node.');
-        if(configPage.isConnected) {
-            $('.connection-error').slideUp();
-        }
-        else {
-            $('.connection-error').slideDown();
-        }
-    }, 1000);
+    // setInterval(function () {
+    //     $('.connection-error .text-message').text(' Can NOT connect to ' + configPage.nodeUrl + ' Geth node.');
+    //     if(configPage.isConnected) {
+    //         $('.connection-error').slideUp();
+    //     }
+    //     else {
+    //         $('.connection-error').slideDown();
+    //     }
+    // }, 1000);
     mainPage.reload();
     // setInterval(function () {
     //     coinsPage.showCoins();
@@ -233,7 +254,7 @@ var coinsPage = {
         coinsPage.addAccountModal = $('#add-address-modal').modal();
     },
     saveNewAddress : function() {
-        coinsPage.addAdditionalAccount($('#new-address').val());
+        coinsPage.addAdditionalAccount($.trim($('#new-address').val()));
         coinsPage.showCoins();
         coinsPage.addAccountModal.modal('hide');
     },
@@ -565,7 +586,10 @@ var configPage = {
     nodeUrl: '',
     isConnected : false,
     saveConfig: function () {
-        var newNodeUrl = $('#geth-node-url').val();
+        $('.connection-success').hide();
+        $('.connection-error').hide();
+
+        var newNodeUrl = $.trim($('#geth-node-url').val());
         var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
           '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
           '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
@@ -586,32 +610,41 @@ var configPage = {
             AICoin.setNodeUrl(configPage.nodeUrl);
             AICoin.reconnect();
             var info = AICoin.coinInfo();
-            configPage.isConnected = true;
-            $('.connection-success .text-message').text(' You are connected to ' + configPage.nodeUrl + ' Geth node.');
-            setTimeout(function () {
-                $('.connection-error').slideUp();
-                $('.connection-success').slideDown();
+            if (typeof info === "undefined") {
+                $('.connection-success').slideUp();
+                $('.connection-error .node-url-span').text(configPage.nodeUrl);
+                $('.connection-error').slideDown();
+                console.log("AICoin.coinInfo() result undefined, connecting to node: " + configPage.nodeUrl);
+            }
+            else {
+                configPage.isConnected = true;
+                $('.connection-success .text-message').text(' You are connected to ' + configPage.nodeUrl + ' Geth node.');
                 setTimeout(function () {
-                    $('.connection-success').slideUp();
-                }, 5000);
-            }, 200);
-            console.log("Coin Name: " + info.name);
-            console.log("Coin Symbol: " + info.symbol);
-            console.log("Coin Issued: " + parseFloat(info.issued).toFixed(8) + " " + info.symbol);
+                    $('.connection-error').slideUp();
+                    $('.connection-success').slideDown();
+                    setTimeout(function () {
+                        $('.connection-success').slideUp();
+                    }, 5000);
+                }, 200);
+                console.log("Coin Name: " + info.name);
+                console.log("Coin Symbol: " + info.symbol);
+                console.log("Coin Issued: " + parseFloat(info.issued).toFixed(8) + " " + info.symbol);
+            }
         }
         catch (ex) {
             configPage.isConnected = false;
             $('.connection-success').slideUp();
+            $('.connection-error .node-url-span').text(configPage.nodeUrl);
             $('.connection-error').slideDown();
             console.log("Error connectiong to node: " + configPage.nodeUrl);
         }
     },
     loadNodeUrl: function () {
-        configPage.nodeUrl = configPage.nodeUrlDefault;
+        configPage.nodeUrl = $.trim(configPage.nodeUrlDefault);
         if (localStorage.getItem("EthereumNodeUrl") !== null && localStorage.getItem("EthereumNodeUrl") != '') {
-            configPage.nodeUrl = localStorage.getItem("EthereumNodeUrl");
+            configPage.nodeUrl = $.trim(localStorage.getItem("EthereumNodeUrl"));
         }
-        $('#geth-node-url').val(configPage.nodeUrl);
+        $('#geth-node-url').val($.trim(configPage.nodeUrl));
     }
 };
 
