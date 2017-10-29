@@ -5,12 +5,10 @@ window.onload = function () {
     // restrict to MAINNET network .
     AICoin.setSingleNetwork("MAINNET");
     AICoin.setNodeUrl($.trim(configPage.nodeUrl));
-    try
-    {
+    try {
         AICoin.connect();
         var info = AICoin.coinInfo();
-        if (typeof info === "undefined")
-        {
+        if (typeof info === "undefined") {
             configPage.isConnected = false;
             $('.connection-error .node-url-span').text(configPage.nodeUrl);
             $('.connection-error').slideDown();
@@ -20,7 +18,7 @@ window.onload = function () {
             $('.connection-success .text-message').text(' You are connected to ' + configPage.nodeUrl + ' Geth node.');
             setTimeout(function () {
                 $('.connection-success').slideDown();
-                setTimeout(function() {
+                setTimeout(function () {
                     $('.connection-success').slideUp();
                 }, 5000);
             }, 200);
@@ -29,47 +27,37 @@ window.onload = function () {
             console.log("Coin Issued: " + parseFloat(info.issued).toFixed(8) + " " + info.symbol);
         }
 
-    } catch(ex) {
+    } catch (ex) {
         configPage.isConnected = false;
         $('.connection-error .node-url-span').text(configPage.nodeUrl);
         $('.connection-error').slideDown();
     }
     setInterval(function () {
-            try {
-                var info = AICoin.coinInfo();
-                if (typeof info === "undefined")
-                {
-                    configPage.isConnected = false;
-                    $('.connection-error .node-url-span').text(configPage.nodeUrl);
-                    $('.connection-error').slideDown();
-                    console.log('Fail to connect AICoin core.');
-                }
-                else {
-                    configPage.isConnected = true;
-                    $('.connection-error').slideUp();
-                    console.log('AICoin node connection OK.');
-                }
-            }
-            catch (ex) {
+        console.log("Periodic checking of Ethereum node connection.");
+        try {
+            var info = AICoin.coinInfo();
+            if (typeof info === "undefined") {
                 configPage.isConnected = false;
                 $('.connection-error .node-url-span').text(configPage.nodeUrl);
                 $('.connection-error').slideDown();
                 console.log('Fail to connect AICoin core.');
             }
-    }, 10000);
-    // setInterval(function () {
-    //     $('.connection-error .text-message').text(' Can NOT connect to ' + configPage.nodeUrl + ' Geth node.');
-    //     if(configPage.isConnected) {
-    //         $('.connection-error').slideUp();
-    //     }
-    //     else {
-    //         $('.connection-error').slideDown();
-    //     }
-    // }, 1000);
+            else {
+                configPage.isConnected = true;
+                $('.connection-error').slideUp();
+                console.log('AICoin node connection OK.');
+            }
+        }
+        catch (ex) {
+            configPage.isConnected = false;
+            $('.connection-error .node-url-span').text(configPage.nodeUrl);
+            $('.connection-error').slideDown();
+            console.log('Fail to connect AICoin core.');
+        }
+    }, 60000);
+
     mainPage.reload();
-    // setInterval(function () {
-    //     coinsPage.showCoins();
-    // }, 5000);
+
     $(".password_show_button").mouseup(function () {
         $(".password-field").attr("type", "password");
     });
@@ -114,7 +102,7 @@ var mainPage = {
                 try {
                     coinsPage.showCoins();
                 }
-                catch(ex) {}
+                catch (ex) { }
                 $('#coin-loader').hide();
             }, 50);
         }
@@ -124,7 +112,7 @@ var mainPage = {
                 try {
                     ballotsPages.loadOpenBallots();
                 }
-                catch(ex) { }
+                catch (ex) { }
                 $('#openballots-loader').hide();
             }, 50);
         }
@@ -134,7 +122,7 @@ var mainPage = {
                 try {
                     ballotsPages.loadFutureBallots();
                 }
-                catch(ex) {}
+                catch (ex) { }
                 $('#futureballots-loader').hide();
             }, 50);
         }
@@ -144,7 +132,7 @@ var mainPage = {
                 try {
                     ballotsPages.loadPastBallots();
                 }
-                catch(ex) {}
+                catch (ex) { }
                 $('#pastballots-loader').hide();
             }, 100);
         }
@@ -167,8 +155,8 @@ var mainPage = {
 };
 
 var coinsPage = {
-    addAccountModal : null,
-    sendCoinsModal : null,
+    addAccountModal: null,
+    sendCoinsModal: null,
     showCoins: function () {
         coinsPage.loadAllCoins();
 
@@ -176,15 +164,15 @@ var coinsPage = {
         $('#coin-accounts-dropdown option').remove().end();
         if (AllAccouts != null && AllAccouts != [] && AllAccouts.length > 0) {
             var uniqueAccounts = [];
-            for (var i = 0; i<AllAccouts.length; i++) {
-                uniqueAccounts.push(AllAccouts[i].toLowerCase());
+            for (var i = 0; i < AllAccouts.length; i++) {
+                uniqueAccounts.push(AllAccouts[i]);
             }
             AllAccouts = uniqueAccounts.reverse().filter(function (e, i, arr) {
                 return arr.indexOf(e, i + 1) === -1;
             }).reverse();
             for (var i = 0; i < AllAccouts.length; i++) {
                 coinsTableHtml += '<tr>';
-                coinsTableHtml += '<td class="text-center">' + (i + 1)  + '</td>';
+                coinsTableHtml += '<td class="text-center">' + (i + 1) + '</td>';
                 var thisAccount = AllAccouts[i];
                 coinsTableHtml += '<td>' + thisAccount + '</td>';
                 var balance = 0;
@@ -195,13 +183,13 @@ var coinsPage = {
                 coinsTableHtml += '<td class="text-right">' + balance + '</td>';
                 coinsTableHtml += '<td class="text-center">XAI</td>';
                 coinsTableHtml += '<td class="text-center">';
-                coinsTableHtml += '<button class="btn btn-success btn-sm send-coins-btn" onclick="coinsPage.showSendCoinsPanel(\'' + thisAccount + '\')">Send<div class="ripple-container"></div></button>';
+                coinsTableHtml += '<button class="btn btn-success btn-sm send-coins-btn" onclick="coinsPage.showSendCoinsPanel(\'' + thisAccount.toLowerCase() + '\')">Send<div class="ripple-container"></div></button>';
                 if (coinsPage.isLocalAccount(thisAccount)) {
-                    coinsTableHtml += '<button class="btn btn-danger btn-sm delete-address-btn" onclick="coinsPage.deleteLocalAccount(\'' + thisAccount + '\')">Delete<div class="ripple-container"></div></button>';
+                    coinsTableHtml += '<button class="btn btn-danger btn-sm delete-address-btn" onclick="coinsPage.deleteLocalAccount(\'' + thisAccount.toLowerCase() + '\')">Delete<div class="ripple-container"></div></button>';
                 }
                 coinsTableHtml += '</td>';
                 coinsTableHtml += '</tr>';
-                $('#coin-accounts-dropdown').append($("<option />").val(thisAccount).text(thisAccount));
+                $('#coin-accounts-dropdown').append($("<option />").val(thisAccount.toLowerCase()).text(thisAccount.toLowerCase()));
             }
         }
 
@@ -221,7 +209,7 @@ var coinsPage = {
 
     },
     loadAdditionalAccounts: function () {
-        var localAccounts = JSON.parse(localStorage.getItem("BrowserAicoinAccounts"));
+        var localAccounts = JSON.parse(GetVariable("BrowserAicoinAccounts"));
         if (localAccounts != null && localAccounts != '') {
             if (Array.isArray(localAccounts))
                 return localAccounts;
@@ -233,17 +221,21 @@ var coinsPage = {
         }
         return [];
     },
-    isLocalAccount : function(address) {
-        if (AdditionalAccounts != null && AdditionalAccounts.length > 0 && AdditionalAccounts.indexOf(address) > -1)
-            return true;
+    isLocalAccount: function (address) {
+        if (AdditionalAccounts != null && AdditionalAccounts.length > 0)// && AdditionalAccounts.indexOf(address) > -1)
+        {
+            for(var i=0; i < AdditionalAccounts.length; i++) {
+                if($.trim(AdditionalAccounts[i].toLowerCase()) == $.trim(address))
+                    return true;
+            }
+        }
         return false;
     },
     deleteLocalAccount: function (address) {
-        if(coinsPage.isLocalAccount(address))
-        {
+        if (coinsPage.isLocalAccount(address)) {
             var index = AdditionalAccounts.indexOf(address);
             AdditionalAccounts.splice(index, 1);
-            localStorage.setItem("BrowserAicoinAccounts", JSON.stringify(AdditionalAccounts));
+            SaveVariable("BrowserAicoinAccounts", JSON.stringify(AdditionalAccounts));
             coinsPage.showCoins();
             return true;
         }
@@ -253,7 +245,7 @@ var coinsPage = {
         $('#new-address').val('');
         coinsPage.addAccountModal = $('#add-address-modal').modal();
     },
-    saveNewAddress : function() {
+    saveNewAddress: function () {
         coinsPage.addAdditionalAccount($.trim($('#new-address').val()));
         coinsPage.showCoins();
         coinsPage.addAccountModal.modal('hide');
@@ -270,7 +262,7 @@ var coinsPage = {
             AdditionalAccounts.push(address);
             AllAccouts.push(address);
             //localStorage.removeItem("BrowserAicoinAccounts");
-            localStorage.setItem("BrowserAicoinAccounts", JSON.stringify(AdditionalAccounts));
+            SaveVariable("BrowserAicoinAccounts", JSON.stringify(AdditionalAccounts));
             return true;
         }
         return false;
@@ -304,7 +296,7 @@ var coinsPage = {
         var key = $('#sender-key').val();
         AICoin.transfer(recipient, amount, sender, key, coinsPage.sendCoinsCallback);
     },
-    sendCoinsCallback : function(err, result) {
+    sendCoinsCallback: function (err, result) {
         if (err) {
             console.log(err);
             mainPage.showAlert("Failed to send coins!\n" + err);
@@ -324,7 +316,7 @@ var coinsPage = {
 
 var ballotsPages = {
     sendVoteModal: null,
-    loadOpenBallots : function() {
+    loadOpenBallots: function () {
         var openBallotsHtml = '';
         AllBallots = AICoin.ballots();
         if (AllBallots && AllBallots != null && AllBallots.length > 0) {
@@ -473,6 +465,7 @@ var ballotsPages = {
                             ballotInfo.options[j] = { name: ballotInfo.options[j], voteCount: thisVoteCount };
                             voteSum += thisVoteCount;
                             if (thisVoteCount > winVote) {
+                                winVote = thisVoteCount;
                                 winIndex = j;
                                 winOption = ballotInfo.votesCast[j].optionName;
                             }
@@ -584,7 +577,7 @@ var ballotsPages = {
 var configPage = {
     nodeUrlDefault: 'http://localhost:8545',
     nodeUrl: '',
-    isConnected : false,
+    isConnected: false,
     saveConfig: function () {
         $('.connection-success').hide();
         $('.connection-error').hide();
@@ -603,7 +596,7 @@ var configPage = {
 
         // Save Url
         configPage.nodeUrl = newNodeUrl;
-        localStorage.setItem("EthereumNodeUrl", newNodeUrl);
+        SaveVariable("EthereumNodeUrl", newNodeUrl);
 
         try {
             console.log("Change connection node URL: " + configPage.nodeUrl);
@@ -641,15 +634,15 @@ var configPage = {
     },
     loadNodeUrl: function () {
         configPage.nodeUrl = $.trim(configPage.nodeUrlDefault);
-        if (localStorage.getItem("EthereumNodeUrl") !== null && localStorage.getItem("EthereumNodeUrl") != '') {
-            configPage.nodeUrl = $.trim(localStorage.getItem("EthereumNodeUrl"));
+        if (GetVariable("EthereumNodeUrl") !== null && GetVariable("EthereumNodeUrl") != '') {
+            configPage.nodeUrl = $.trim(GetVariable("EthereumNodeUrl"));
         }
         $('#geth-node-url').val($.trim(configPage.nodeUrl));
     }
 };
 
-(function($) {
-    $.fn.goTo = function() {
+(function ($) {
+    $.fn.goTo = function () {
         $('html, body').animate({
             scrollTop: $(this).offset().top + 'px'
         }, 'fast');
@@ -696,3 +689,110 @@ function formatDate(dateObj, format) {
         return curr_date + "/" + curr_month + "/" + curr_year + " " + curr_hr + ":" + curr_min;
     }
 }
+
+function SaveVariable(key, value) {
+    if(doesSuppportLocalStorage()) {
+        localStorage.setItem(key, value);
+    }
+    else {
+        setCookie(key, value, 365);
+    }
+}
+
+function GetVariable(key, value) {
+    var savedItem = null;
+    if(doesSuppportLocalStorage()) {
+        savedItem = localStorage.getItem(key);
+    }
+    else {
+        savedItem = getCookie(key);
+        if(typeof (savedItem) == 'undefined') {
+            savedItem = null;
+        }
+    }
+    return savedItem;
+}
+
+function doesSuppportLocalStorage() {
+    try {
+        if (typeof (localStorage) == 'undefined') {
+            return false;
+        } else {
+            try {
+                localStorage.setItem("value", "This is Abhisheks new HTML document");
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+    } catch(ex) { return false; }
+}
+
+function setCookie(c_name, value, exdays) {
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate() + exdays);
+    var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString() + "; path=/");
+    document.cookie.json = true;
+    document.cookie = c_name + "=" + c_value;
+}
+
+function getCookie(c_name) {
+    var i, x, y, ARRcookies = document.cookie.split(";");
+    for (i = 0; i < ARRcookies.length; i++) {
+        x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+        y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+        x = x.replace(/^\s+|\s+$/g, "");
+        if (x == c_name) {
+            return unescape(y);
+        }
+    }
+}
+
+function detectIE() {
+    var ua = window.navigator.userAgent;
+
+    var msie = ua.indexOf('MSIE ');
+    if (msie > 0) {
+        // IE 10 or older => return version number
+        return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+    }
+
+    var trident = ua.indexOf('Trident/');
+    if (trident > 0) {
+        // IE 11 => return version number
+        var rv = ua.indexOf('rv:');
+        return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+    }
+
+    var edge = ua.indexOf('Edge/');
+    if (edge > 0) {
+        // IE 12 => return version number
+        return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+    }
+
+    // other browser
+    return false;
+}
+
+// Avoid `console` errors in browsers that lack a console.
+(function() {
+    var method;
+    var noop = function () {};
+    var methods = [
+        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+        'timeStamp', 'trace', 'warn'
+    ];
+    var length = methods.length;
+    var console = (window.console = window.console || {});
+
+    while (length--) {
+        method = methods[length];
+
+        // Only stub undefined methods.
+        if (!console[method]) {
+            console[method] = noop;
+        }
+    }
+}());

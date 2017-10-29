@@ -2,10 +2,10 @@
 var particlesConfigJson = {
     "particles": {
         "number": {
-            "value": 30,
+            "value": 15,
             "density": {
                 "enable": true,
-                "value_area": 200
+                "value_area": 100
             }
         },
         "color": {
@@ -117,3 +117,4 @@ var particlesConfigJson = {
 };
 
 particlesJS('particles-js', particlesConfigJson);
+
