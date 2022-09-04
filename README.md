@@ -1,6 +1,6 @@
 # Panxora Frontend for Lock and Ballots 🎉
 
-- Deployed on [VERCEL](aicoin-frontend.vercel.app)
+- Deployed on [VERCEL](https://aicoin-frontend.vercel.app/)
 
 ## Getting Started
 
