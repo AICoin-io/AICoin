@@ -3,12 +3,10 @@ import {
   Flex,
   Box,
   Stack,
-  Button,
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-import TabsComponent from "../components/Tabs";
-import { useState } from "react";
+import Content from "../components/Content";
 import Navbar from "../components/Navbar";
 
 const Home: NextPage = () => {
@@ -25,7 +23,7 @@ const Home: NextPage = () => {
             <Navbar buttonBg={buttonBg} toggleBg={toggleColorMode} />
           </Box>
           <Box alignSelf="center">
-            <TabsComponent />
+            <Content />
           </Box>
         </Stack>
       </Flex>
