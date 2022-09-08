@@ -9,7 +9,7 @@ import {
   ListIcon,
   Box,
 } from "@chakra-ui/react";
-import { CheckIcon, SunIcon } from "@chakra-ui/icons";
+import { CheckIcon } from "@chakra-ui/icons";
 
 const Content: NextPage = () => {
   return (

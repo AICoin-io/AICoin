@@ -1,10 +1,20 @@
-# Panxora Frontend for Lock and Ballots 🎉
+# AICOIN Frontend for Lock & Ballot Contracts ✨
 
-- Deployed on [VERCEL](https://aicoin-frontend.vercel.app/)
+- Website deployed _NOW_ on [**VERCEL**](https://aicoin-frontend.vercel.app/) 💻
 
-## Getting Started
+- If you want to see **Admin** 👨‍💻 interface go to [**THIS LINK**](https://aicoin-frontend.vercel.app/Admin)
+ 
+## Getting Started ⚙
 
-First, run the development server:
+First install all the dependencies:
+
+```bash
+npm install
+# or 
+yarn
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
