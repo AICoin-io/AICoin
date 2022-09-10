@@ -19,7 +19,7 @@ import NextLink from "next/link";
 const Navbar = (props: any) => {
   const [isLight, setLight] = useState(false);
   const [data, setData] = useState({
-    address: "",
+    address: "Connect Wallet",
     chainID: "",
     isID: false,
     isConnected: false,
@@ -42,33 +42,39 @@ const Navbar = (props: any) => {
   }, [data.address, data.isConnected]);
 
   const connectWallet = async () => {
-    setClicked(true);
-    const accounts = await (window.ethereum as MetaMaskInpageProvider).request<
-      string[]
-    >({
-      method: "eth_requestAccounts",
-    });
+    if (data.isConnected == false) {
+      setClicked(true);
+      const accounts = await (
+        window.ethereum as MetaMaskInpageProvider
+      ).request<string[]>({
+        method: "eth_requestAccounts",
+      });
 
-    if (accounts) {
-      if ((window.ethereum as MetaMaskInpageProvider).networkVersion == "5") {
-        setData({
-          address: `${accounts[0]}`,
-          chainID: "5",
-          isID: true,
-          isConnected: true,
-        });
-      } else {
-        setData({
-          address: `${accounts[0]}`,
-          chainID: `${
-            (window.ethereum as MetaMaskInpageProvider).networkVersion
-          }`,
-          isID: false,
-          isConnected: true,
-        });
+      if (accounts) {
+        if ((window.ethereum as MetaMaskInpageProvider).networkVersion == "5") {
+          const address = accounts[0];
+          const truncated = `0x...${address?.slice(38, 42).toUpperCase()}`;
+          setData({
+            address: `${truncated}`,
+            chainID: "5",
+            isID: true,
+            isConnected: true,
+          });
+        } else {
+          const address = accounts[0];
+          const truncated = `0x...${address?.slice(38, 42).toUpperCase()}`;
+          setData({
+            address: `${truncated}`,
+            chainID: `${
+              (window.ethereum as MetaMaskInpageProvider).networkVersion
+            }`,
+            isID: false,
+            isConnected: true,
+          });
+        }
       }
+      setClicked(false);
     }
-    setClicked(false);
   };
 
   const toggleBackground = () => {
@@ -138,6 +144,7 @@ const Navbar = (props: any) => {
           </Button>
         </Stack>
       </Stack>
+
       <Box alignContent="center" textAlign="center" alignSelf="center">
         <Button
           pb={3}
@@ -150,9 +157,26 @@ const Navbar = (props: any) => {
           color="white"
           onClick={connectWallet}
         >
+          {data.isConnected == true ? (
+            <Box
+              alignContent="center"
+              textAlign="center"
+              alignSelf="center"
+              bg="#1272FC"
+              pt={3}
+              pl={3}
+              pr={3}
+              pb={2}
+              rounded={20}
+            >
+              <Image src="/wallet.svg" width={25} height={25} alt="" />
+            </Box>
+          ) : (
+            ""
+          )}
           {clicked == false ? (
-            <Text fontWeight="bold" ml={4}>
-              Connect Wallet
+            <Text fontWeight="bold" ml={3}>
+              {data.address}
             </Text>
           ) : (
             <Spinner
