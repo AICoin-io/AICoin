@@ -10,36 +10,73 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import NextLink from "next/link";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { setAddr, setConnected } from "../../../slices/setAccount";
+import { setAddress, isConnected } from "../../../slices/setAccount";
+import { useRouter } from "next/router";
 
 const Navbar = (props: any) => {
+  const router = useRouter();
+
+  const address = useSelector(setAddr);
+  const connected = useSelector(setConnected);
+
+  const dispatch = useDispatch();
+
   const [isLight, setLight] = useState(false);
   const [data, setData] = useState({
-    address: "Connect Wallet",
+    address: address,
     chainID: "",
     isID: false,
-    isConnected: false,
+    isConnected: connected,
   });
   const [clicked, setClicked] = useState(false);
 
-  useEffect(() => {
-    let chainId = (window.ethereum as MetaMaskInpageProvider).networkVersion;
+  const getData = useCallback(async () => {
+    const accounts = await (window.ethereum as MetaMaskInpageProvider).request<
+      string[]
+    >({
+      method: "eth_requestAccounts",
+    });
 
+    if (accounts) {
+      if ((window.ethereum as MetaMaskInpageProvider).networkVersion == "5") {
+        const address = accounts[0];
+        const truncated = `0x...${address?.slice(38, 42).toUpperCase()}`;
+        dispatch(setAddress(truncated));
+        dispatch(isConnected(true));
+        setData({
+          address: `${truncated}`,
+          chainID: "5",
+          isID: true,
+          isConnected: connected,
+        });
+      }
+    }
+  }, [connected, dispatch]);
+
+  useEffect(() => {
+    if (router.pathname != "/") {
+      getData();
+    }
+    let chainId = (window.ethereum as MetaMaskInpageProvider).networkVersion;
     if (chainId == "5") {
       setData({
-        address: `${data.address}`,
+        address: address,
         chainID: `${
           (window.ethereum as MetaMaskInpageProvider).networkVersion
         }`,
         isID: true,
-        isConnected: data.isConnected,
+        isConnected: connected,
       });
     }
-  }, [data.address, data.isConnected]);
+  }, [address, connected, getData, router]);
 
   const connectWallet = async () => {
     if (data.isConnected == false) {
@@ -54,22 +91,26 @@ const Navbar = (props: any) => {
         if ((window.ethereum as MetaMaskInpageProvider).networkVersion == "5") {
           const address = accounts[0];
           const truncated = `0x...${address?.slice(38, 42).toUpperCase()}`;
+          dispatch(setAddress(truncated));
+          dispatch(isConnected(true));
           setData({
             address: `${truncated}`,
             chainID: "5",
             isID: true,
-            isConnected: true,
+            isConnected: connected,
           });
         } else {
           const address = accounts[0];
           const truncated = `0x...${address?.slice(38, 42).toUpperCase()}`;
+          dispatch(setAddress(truncated));
+          dispatch(isConnected(true));
           setData({
             address: `${truncated}`,
             chainID: `${
               (window.ethereum as MetaMaskInpageProvider).networkVersion
             }`,
             isID: false,
-            isConnected: true,
+            isConnected: connected,
           });
         }
       }
@@ -102,7 +143,7 @@ const Navbar = (props: any) => {
             query={["AI"]}
             styles={{ px: "2", py: "1", rounded: "xl", bg: "blue.100" }}
           >
-            Panxora AI
+            AI Coin
           </Highlight>
         </Heading>
         <Stack direction="row" pl={10} gap={4}>

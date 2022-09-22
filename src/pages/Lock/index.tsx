@@ -7,18 +7,18 @@ import {
   Highlight,
   Text,
 } from "@chakra-ui/react";
-import Navbar from "../../components/Navbar";
-import LockComponent from "../../components/Lock";
-import { useEffect, useState } from "react";
 import LOCK_ABI from "../../common/Token.sol/Token.json";
+import LockComponent from "../../components/Lock";
+import Navbar from "../../components/Navbar";
+import { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import UnLockComponent from "../../components/Unlock";
 
 const Lock = () => {
   const LOCK_CONTRACT = "0xd6f173F63c200996aADf61Fb92F0795CCDDc8229";
 
   // ADD API KEY
-  const RPC_ENDPOINT = "https://goerli.infura.io/v3/";
+  const RPC_ENDPOINT =
+    "https://goerli.infura.io/v3/8e261d9cde8c47a5b6078f4fb2f14740";
 
   const [value, setValue] = useState("***");
   const { toggleColorMode } = useColorMode();
@@ -51,7 +51,7 @@ const Lock = () => {
         >
           <Heading lineHeight="tall">
             <Highlight
-              query={["Panxora Pools"]}
+              query={["AICoin Pools"]}
               styles={{
                 px: "4",
                 py: "1",
@@ -60,7 +60,7 @@ const Lock = () => {
                 color: "#000428",
               }}
             >
-              Panxora Pools
+              AICoin Pools
             </Highlight>
           </Heading>
           <Text ml={3} mt={3} fontSize="lg" fontWeight="bold">
@@ -69,7 +69,6 @@ const Lock = () => {
         </Box>
       </Stack>
       <LockComponent buttonBg={buttonBg} bg={bg} totalLocked={value} />
-      {/* <UnLockComponent buttonBg={buttonBg} bg={bg} /> */}
     </Box>
   );
 };

@@ -15,9 +15,9 @@ import {
   AccordionPanel,
   Stack,
 } from "@chakra-ui/react";
+import LOCK_ABI from "../../common/Token.sol/Token.json";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import LOCK_ABI from "../../common/Token.sol/Token.json";
 
 const LockComponent = (props: any) => {
   const LOCK_CONTRACT = "0xd6f173F63c200996aADf61Fb92F0795CCDDc8229";

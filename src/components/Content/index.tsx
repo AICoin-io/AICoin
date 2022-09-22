@@ -31,7 +31,7 @@ const Content: NextPage = () => {
               bg: "blue.100",
             }}
           >
-            AICOIN is a unique concept in Finance. It is a utility Token that
+            AICoin is a unique concept in Finance. It is a utility Token that
             gives Holders access to a range of benefits based on the AI Trading
             modeling and other technologies developed by the founding team.
           </Highlight>
