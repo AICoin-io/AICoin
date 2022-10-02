@@ -11,9 +11,9 @@ import {
   Link,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import Navbar from "../../components/Navbar";
-import { ArrowForwardIcon } from "@chakra-ui/icons";
-import BallotCards from "../../components/BallotCards";
+import Navbar from "../../../components/Navbar";
+import { ArrowBackIcon } from "@chakra-ui/icons";
+import BallotClosedCards from "../../../components/BallotClosedCards";
 
 const Ballots: NextPage = () => {
   const { toggleColorMode } = useColorMode();
@@ -36,7 +36,7 @@ const Ballots: NextPage = () => {
         >
           <Heading lineHeight="tall">
             <Highlight
-              query={["AICoin Ballots"]}
+              query={["AICoin Closed Ballots"]}
               styles={{
                 px: "4",
                 py: "1",
@@ -45,28 +45,28 @@ const Ballots: NextPage = () => {
                 color: "#000428",
               }}
             >
-              AICoin Ballots
+              AICoin Closed Ballots
             </Highlight>
           </Heading>
           <Text ml={3} mt={3} fontSize="lg" fontWeight="bold">
-            Have your say in the future of the AICoin Ecosystem
+            Review closed Ballots and Discover which option won!
           </Text>
           <Button
-            rightIcon={<ArrowForwardIcon />}
+            leftIcon={<ArrowBackIcon />}
             colorScheme="blue"
             variant="outline"
             mt={5}
             ml={3}
             rounded={20}
           >
-            <NextLink href="/Ballots/Closed" passHref>
-              Closed Ballots
+            <NextLink href="/Ballots" passHref>
+              Open Ballots
             </NextLink>
           </Button>
         </Box>
       </Stack>
       <Box>
-        <BallotCards />
+        <BallotClosedCards />
       </Box>
     </Box>
   );

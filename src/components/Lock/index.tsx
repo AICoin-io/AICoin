@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 
 const LockComponent = (props: any) => {
-  const LOCK_CONTRACT = "0xd6f173F63c200996aADf61Fb92F0795CCDDc8229";
+  const LOCK_CONTRACT = "0x55bf8746cCf6E88298502edb38CBa41a6D5C6651";
 
   const format = (val: any) => `Ξ ` + val;
   const parse = (val: any) => val.replace(/^\$/, "");

@@ -156,7 +156,8 @@ const Navbar = (props: any) => {
             rounded={20}
           >
             <NextLink href="/" passHref>
-              <Link style={{ textDecoration: "none" }}>Token</Link>
+              Token
+              {/* <Link style={{ textDecoration: "none" }}></Link> */}
             </NextLink>
           </Button>
           <Button
@@ -168,7 +169,8 @@ const Navbar = (props: any) => {
             rounded={20}
           >
             <NextLink href="/Lock" passHref>
-              <Link style={{ textDecoration: "none" }}>Lock</Link>
+              Lock
+              {/* <Link style={{ textDecoration: "none" }}></Link> */}
             </NextLink>
           </Button>
           <Button
@@ -180,7 +182,8 @@ const Navbar = (props: any) => {
             rounded={20}
           >
             <NextLink href="/Ballots" passHref>
-              <Link style={{ textDecoration: "none" }}>Vote</Link>
+              Vote
+              {/* <Link style={{ textDecoration: "none" }}></Link> */}
             </NextLink>
           </Button>
         </Stack>
