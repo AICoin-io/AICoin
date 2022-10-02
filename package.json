@@ -1,0 +1,35 @@
+{
+  "name": "aicoin-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^2.0.9",
+    "@chakra-ui/react": "^2.2.9",
+    "@emotion/react": "^11.10.0",
+    "@emotion/styled": "^11.10.0",
+    "@metamask/detect-provider": "^1.2.0",
+    "@metamask/providers": "^9.1.0",
+    "@reduxjs/toolkit": "^1.8.5",
+    "framer-motion": "^6.5.1",
+    "next": "12.2.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-redux": "^8.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.13",
+    "@types/react": "18.0.17",
+    "@types/react-dom": "18.0.6",
+    "@types/web3": "^1.2.2",
+    "eslint": "8.23.0",
+    "eslint-config-next": "12.2.5",
+    "ethers": "^5.7.0",
+    "typescript": "4.8.2"
+  }
+}
